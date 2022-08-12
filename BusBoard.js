@@ -59,5 +59,23 @@ async function getStopPointsWithinRadius(){
      
 }
 
-getStopPointsWithinRadius();
+// Display Direction to the Nearest stop using journey planner
+
+async function JourneyPlannerDirections(){
+
+  console.log('Please enter the Starting PostCode: '); 
+  const PostCode1 = readline.prompt();
+  
+  console.log('Please enter the Destination PostCode: '); 
+  const PostCode2 = readline.prompt();
+  
+  //Fetching the directions to the nearest BusStop
+
+  const  DirectionResponse= await fetch(`https://api.tfl.gov.uk/Journey/JourneyResults/${PostCode1}/to/${PostCode2}`);
+  const DirectionData = await DirectionResponse.json(); 
+  console.log(DirectionData)
+}
+
+JourneyPlannerDirections()
+
 
