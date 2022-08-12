@@ -31,11 +31,8 @@ console.log(UpcomingBuses);
 
 //Find Two Stop Points within Radius and Print Next Bus Arrivals for them
 
-async function getStopPointsWithinRadius(){
+async function getStopPointsWithinRadius(PostCode){
 
-    console.log('Please enter the PostCode: '); 
-    const PostCode = readline.prompt();
-    
     //Fetching the coordinates for the given postcode
     const  PostCodeResponse= await fetch('http://api.postcodes.io/postcodes/'+PostCode);
     const PostCodeData = await PostCodeResponse.json(); 
@@ -61,17 +58,11 @@ async function getStopPointsWithinRadius(){
 
 // Display Direction to the Nearest stop using journey planner
 
-async function JourneyPlannerDirections(){
+async function JourneyPlannerDirections(StartPostCode,DestinationPostCode){
 
-  console.log('Please enter the Starting PostCode: '); 
-  const PostCode1 = readline.prompt();
-  
-  console.log('Please enter the Destination PostCode: '); 
-  const PostCode2 = readline.prompt();
-  
   //Fetching the directions to the nearest BusStop
 
-  const  DirectionResponse= await fetch(`https://api.tfl.gov.uk/Journey/JourneyResults/${PostCode1}/to/${PostCode2}`);
+  const  DirectionResponse= await fetch(`https://api.tfl.gov.uk/Journey/JourneyResults/${StartPostCode}/to/${DestinationPostCode}`);
   const DirectionData = await DirectionResponse.json(); 
   const Detail = DirectionData.journeys[0].legs[0].instruction.detailed;
   const Directions = DirectionData.journeys[0].legs[0].instruction;
@@ -88,6 +79,28 @@ async function JourneyPlannerDirections(){
 
 }
 
-JourneyPlannerDirections()
+async function JourneyPlanner(){
 
+  console.log('Please enter the Starting PostCode: '); 
+  const PostCode1 = readline.prompt();
+  
+  console.log('Please enter the Destination PostCode: '); 
+  const PostCode2 = readline.prompt();
+
+  console.log('Do You want the directions to the nearest Bus Stop (Y/N): '); 
+  const Response = readline.prompt();
+
+  if(Response.toString() === 'Y'){
+
+    await JourneyPlannerDirections(PostCode1,PostCode2);
+    await getStopPointsWithinRadius(PostCode1);
+
+  }else{
+
+    await getStopPointsWithinRadius(PostCode1);
+    
+  }
+}
+
+JourneyPlanner();
 
