@@ -73,7 +73,19 @@ async function JourneyPlannerDirections(){
 
   const  DirectionResponse= await fetch(`https://api.tfl.gov.uk/Journey/JourneyResults/${PostCode1}/to/${PostCode2}`);
   const DirectionData = await DirectionResponse.json(); 
-  console.log(DirectionData)
+  const Detail = DirectionData.journeys[0].legs[0].instruction.detailed;
+  const Directions = DirectionData.journeys[0].legs[0].instruction;
+
+  //Prints where to go to reach nearest Bus Stop
+  console.log(`To go to the nearest Bus Stop : ${Detail}`);
+
+  //Prints the Direction to the nearest Bus Stop
+  console.log(`\nTo ${Detail} . Follow these directions: `)
+  for(let i=0; i<Directions.steps.length; i++){
+     console.log(Directions.steps[i].descriptionHeading + Directions.steps[i].description);
+  }
+  
+
 }
 
 JourneyPlannerDirections()
